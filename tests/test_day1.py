@@ -14,7 +14,7 @@ class TestSum(unittest.TestCase):
 
         for i, expected in param_list:
             with self.subTest():
-                fuel = day1.get_module_fuel_requirement(i)
+                fuel = day1.get_mass_fuel_requirement(i)
                 self.assertEqual(fuel, expected)
 
 
