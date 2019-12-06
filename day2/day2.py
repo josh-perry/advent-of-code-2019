@@ -15,24 +15,50 @@ def execute_intcode(intcode):
         elif op[0] == 2:
             intcode[op[3]] = intcode[op[1]] * intcode[op[2]]
         elif op[0] == 99:
-            print("halt!")
             break
         else:
-            raise Exception("Unknown opcode!")
+            break
         
         # Increment
         position += 4
 
+
+def load_from_file(filename):
+    with open(filename) as f:
+        return [int(i) for i in f.read().split(",")]
+
+
+def set_noun_verb(intcode, n, v):
+    intcode[1] = n
+    intcode[2] = v
+
+
 if __name__ == '__main__':
-    opcode = []
+    result = None
 
-    with open("day2/input") as f:
-        opcode = [int(i) for i in f.read().split(",")]
+    noun = None
+    verb = None
+    answer_found = False
 
-    # Restore previous state:
-    opcode[1] = 12
-    opcode[2] = 2
+    for noun in range(0, 99+1):
+        for verb in range(0, 99+1):
+            opcode = load_from_file("day2/input")
+            position = 0
 
-    execute_intcode(opcode)
+            set_noun_verb(opcode, noun, verb)
+            execute_intcode(opcode)
 
-    print(opcode[0])
+            result = opcode[0]
+            
+            if result == 19690720:
+                answer_found = True
+                break
+
+        if answer_found:
+            break
+
+    if answer_found:
+        print("{}\t{}\t{}".format(noun, verb, 100*noun+verb))
+        print(opcode[0])
+    else:
+        print("No answer found!")
